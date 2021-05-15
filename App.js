@@ -6,52 +6,18 @@ import { randomCreatedDate, randomTraderName, randomUpdatedDate } from "@materia
 import Axios from "axios"
 
 const columns = [
+  { field: "id", headerName: "id", type: "number", editable: true },
   { field: "firstName", headerName: "FirstName", width: 180, editable: true },
+  { field: "lastName", headerName: "lastName", width: 180, editable: true },
   { field: "username", headerName: "username", width: 180, editable: true },
-]
-
-const rows = [
-  {
-    id: 1,
-    name: randomTraderName(),
-    age: 25,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 2,
-    name: randomTraderName(),
-    age: 36,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 3,
-    name: randomTraderName(),
-    age: 19,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 4,
-    name: randomTraderName(),
-    age: 28,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 5,
-    name: randomTraderName(),
-    age: 23,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
 ]
 
 export default function App() {
   const [username, setUsername] = useState("admin")
   const [password, setPassword] = useState("admin")
-  const [data, setData] = useState([])
+  const [prevdata, setPrevData] = useState([])
+  // const [filteredRows, setFilteredRows] = React.useState([...data])
+  const [filteredRows, setFilteredRows] = useState([])
 
   async function getLogin() {
     try {
@@ -75,11 +41,10 @@ export default function App() {
 
   useEffect(() => {
     getLogin().then((res) => {
-      setData(res.data)
+      setPrevData(res.data)
+      setFilteredRows(res.data)
     }, [])
   }, [])
-
-  const [filteredRows, setFilteredRows] = React.useState([...data])
 
   const onChange = (e) => {
     const { value } = e.target
@@ -88,7 +53,7 @@ export default function App() {
     if (value) {
       setFilteredRows(_filtered)
     } else {
-      setFilteredRows(data)
+      setFilteredRows(prevdata)
     }
   }
   return (
